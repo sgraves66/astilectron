@@ -236,11 +236,12 @@ app.on('ready',() => {
             elements[json.targetID].maximize()
             break;
             case consts.eventNames.windowCmdMessage:
-            case consts.eventNames.windowCmdMessageCallback:          
-            if (typeof elements[json.targetID].webContents !== 'undefined') {
-              let m = {message: json.message}
-              if (typeof json.callbackId !== "undefined") m.callbackId = json.callbackId
-              elements[json.targetID].webContents.send(json.name === consts.eventNames.windowCmdMessageCallback ? consts.eventNames.ipcCmdMessageCallback : consts.eventNames.ipcCmdMessage, m)
+            case consts.eventNames.windowCmdMessageCallback:
+            if ((typeof elements[json.targetID] !== 'undefined') &&
+                (typeof elements[json.targetID].webContents !== 'undefined')) {
+                let m = {message: json.message}
+                if (typeof json.callbackId !== "undefined") m.callbackId = json.callbackId
+                elements[json.targetID].webContents.send(json.name === consts.eventNames.windowCmdMessageCallback ? consts.eventNames.ipcCmdMessageCallback : consts.eventNames.ipcCmdMessage, m)
             }
             break;
             case consts.eventNames.windowCmdMinimize:
