@@ -58,11 +58,6 @@ app.on('ready',() => {
     rl.on('line', function(line){
         // Parse the JSON
         let json = JSON.parse(line)        
-        
-        // Ignore events if shutdwon
-        if (json.targetID && !elements[json.targetID]) {
-            return;
-        }
 
         // Switch on event name
         let window;
@@ -241,10 +236,12 @@ app.on('ready',() => {
             elements[json.targetID].maximize()
             break;
             case consts.eventNames.windowCmdMessage:
-            case consts.eventNames.windowCmdMessageCallback:
-            let m = {message: json.message}
-            if (typeof json.callbackId !== "undefined") m.callbackId = json.callbackId
-            elements[json.targetID].webContents.send(json.name === consts.eventNames.windowCmdMessageCallback ? consts.eventNames.ipcCmdMessageCallback : consts.eventNames.ipcCmdMessage, m)
+            case consts.eventNames.windowCmdMessageCallback:          
+            if (typeof elements[json.targetID].webContents !== 'undefined') {
+              let m = {message: json.message}
+              if (typeof json.callbackId !== "undefined") m.callbackId = json.callbackId
+              elements[json.targetID].webContents.send(json.name === consts.eventNames.windowCmdMessageCallback ? consts.eventNames.ipcCmdMessageCallback : consts.eventNames.ipcCmdMessage, m)
+            }
             break;
             case consts.eventNames.windowCmdMinimize:
             elements[json.targetID].minimize()
