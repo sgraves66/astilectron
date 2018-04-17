@@ -57,7 +57,12 @@ app.on('ready',() => {
     // Read from client
     rl.on('line', function(line){
         // Parse the JSON
-        let json = JSON.parse(line)
+        let json = JSON.parse(line)        
+        
+        // Ignore events if shutdwon
+        if (json.targetID && !elements[json.targetID]) {
+            return;
+        }
 
         // Switch on event name
         let window;
